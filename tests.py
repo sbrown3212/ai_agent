@@ -1,25 +1,39 @@
 # from functions.get_file_info import get_files_info
-from functions.get_file_content import get_file_content
+# from functions.get_file_content import get_file_content
 # from config import MAX_CHARS
+from functions.write_file import write_file
 
 
 def tests():
-    # --- Tests for 'get_file_content' ---
-    # main.py
-    print("Result for 'main.py':")
-    result = get_file_content("calculator", "main.py")
+    # --- Tests for 'write_file' ---
+    print("lorem.txt:")
+    result = write_file("calculator", "lorem.txt", "wait, this isn't lorem ipsum")
     print(result)
 
-    # pkg/calculator.py
-    print("Result for 'pkg/calculator.py':")
-    result = get_file_content("calculator", "pkg/calculator.py")
+    print("\nmorelorem.txt:")
+    result = write_file("calculator", "pkg/morelorem.txt", "lorem ipsum dolor sit amet")
     print(result)
 
-    # /bin/cat
-    print("Result for '/bin/cat':")
-    result = get_file_content("calculator", "/bin/cat")
+    print("\ntemp.txt (expecting error):")
+    result = write_file("calculator", "/tmp/temp.txt", "this should not be allowed")
     print(result)
 
+    # # --- Tests for 'get_file_content' ---
+    # # main.py
+    # print("Result for 'main.py':")
+    # result = get_file_content("calculator", "main.py")
+    # print(result)
+    #
+    # # pkg/calculator.py
+    # print("Result for 'pkg/calculator.py':")
+    # result = get_file_content("calculator", "pkg/calculator.py")
+    # print(result)
+    #
+    # # /bin/cat
+    # print("Result for '/bin/cat':")
+    # result = get_file_content("calculator", "/bin/cat")
+    # print(result)
+    #
     # Lorem.txt
     # print("Result from 'get_file_content()' for 'lorem.txt':")
     # working_directory = "calculator"
