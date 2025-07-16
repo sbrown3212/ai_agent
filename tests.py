@@ -1,22 +1,44 @@
 # from functions.get_file_info import get_files_info
 # from functions.get_file_content import get_file_content
 # from config import MAX_CHARS
-from functions.write_file import write_file
+# from functions.write_file import write_file
+from functions.run_python import run_python_file
 
 
 def tests():
-    # --- Tests for 'write_file' ---
-    print("lorem.txt:")
-    result = write_file("calculator", "lorem.txt", "wait, this isn't lorem ipsum")
-    print(result)
+    # --- Tests for 'run_python.py' ---
+    print('Output for run_python_file("calculator", "main.py"):')
+    result = run_python_file("calculator", "main.py")
+    print(f"{result}\n")
 
-    print("\nmorelorem.txt:")
-    result = write_file("calculator", "pkg/morelorem.txt", "lorem ipsum dolor sit amet")
-    print(result)
+    print('Output for un_python_file("calculator", "main.py", ["3 + 5"])')
+    result = run_python_file("calculator", "main.py", ["3 + 5"])
+    print(f"{result}\n")
 
-    print("\ntemp.txt (expecting error):")
-    result = write_file("calculator", "/tmp/temp.txt", "this should not be allowed")
-    print(result)
+    print('Output for run_python_file("calculator", "tests.py")')
+    result = run_python_file("calculator", "tests.py")
+    print(f"{result}\n")
+
+    print('Output for run_python_file("calculator", "../main.py"):')
+    result = run_python_file("calculator", "../main.py")
+    print(f"{result}\n")
+
+    print('Output for run_python_file("calculator", "nonexistent.py"):')
+    result = run_python_file("calculator", "nonexistent.py")
+    print(f"{result}\n")
+
+    # # --- Tests for 'write_file' ---
+    # print("lorem.txt:")
+    # result = write_file("calculator", "lorem.txt", "wait, this isn't lorem ipsum")
+    # print(result)
+    #
+    # print("\nmorelorem.txt:")
+    # result = write_file("calculator", "pkg/morelorem.txt", "lorem ipsum dolor sit amet")
+    # print(result)
+    #
+    # print("\ntemp.txt (expecting error):")
+    # result = write_file("calculator", "/tmp/temp.txt", "this should not be allowed")
+    # print(result)
 
     # # --- Tests for 'get_file_content' ---
     # # main.py
