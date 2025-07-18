@@ -5,6 +5,7 @@ from google import genai
 from google.genai import types
 
 from prompts import system_prompt
+from available_functions import available_functions
 
 
 def main():
@@ -35,17 +36,24 @@ def main():
 
 def generate_content(client, messages, verbose):
     response = client.models.generate_content(
-        # QUESTION: Should this be added to 'config.py'???
         model="gemini-2.0-flash-001",
         contents=messages,
-        config=types.GenerateContentConfig(system_instruction=system_prompt),
+        config=types.GenerateContentConfig(
+            tools=[available_functions], system_instruction=system_prompt
+        ),
     )
 
     if verbose:
         print(f"Prompt tokens: {response.usage_metadata.prompt_token_count}")
         print(f"Response tokens: {response.usage_metadata.candidates_token_count}")
 
-    print(response.text)
+    if response.function_calls:
+        for function_call_part in response.function_calls:
+            print(
+                f"Calling function: {function_call_part.name}({function_call_part.args})"
+            )
+    else:
+        print(response.text)
 
 
 if __name__ == "__main__":
