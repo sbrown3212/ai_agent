@@ -1,5 +1,5 @@
 # from functions.get_file_info import get_files_info
-# from functions.get_file_content import get_file_content
+# from functions.get_files_content import get_file_content
 # from config import MAX_CHARS
 # from functions.write_file import write_file
 from functions.run_python import run_python_file
