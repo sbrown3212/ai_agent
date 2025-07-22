@@ -44,5 +44,6 @@ schema_get_file_info = types.FunctionDeclaration(
                 description="The directory to list files from, relative to the working directory. If not provided, list files in the working directory itself.",
             )
         },
+        required=["directory"],
     ),
 )

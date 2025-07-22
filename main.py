@@ -4,6 +4,7 @@ from dotenv import load_dotenv
 from google import genai
 from google.genai import types
 
+from functions.call_function import call_function
 from prompts import system_prompt
 from available_functions import available_functions
 
@@ -49,9 +50,19 @@ def generate_content(client, messages, verbose):
 
     if response.function_calls:
         for function_call_part in response.function_calls:
-            print(
-                f"Calling function: {function_call_part.name}({function_call_part.args})"
-            )
+            # QUESTION: Should this be in a 'try...catch' statement? How do I raise a fatal error?
+            result = call_function(function_call_part, verbose)
+            # print(f"call_function returned: {result}")
+            # print(f"result.parts: {result.parts}")
+
+            try:
+                function_response = result.parts[
+                    0
+                ].function_response.response  # ignore warnings???
+                if verbose:
+                    print(f"-> {function_response}")
+            except (IndexError, AttributeError):
+                raise Exception("Function call did not return a valid response")
     else:
         print(response.text)
 
