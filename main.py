@@ -44,27 +44,40 @@ def generate_content(client, messages, verbose):
         ),
     )
 
+    # Append candidates to 'messages'
+    for candidate in response.candidates:
+        messages.append(candidate.content)
+
     if verbose:
         print(f"Prompt tokens: {response.usage_metadata.prompt_token_count}")
         print(f"Response tokens: {response.usage_metadata.candidates_token_count}")
 
-    if response.function_calls:
-        for function_call_part in response.function_calls:
-            # QUESTION: Should this be in a 'try...catch' statement? How do I raise a fatal error?
-            result = call_function(function_call_part, verbose)
-            # print(f"call_function returned: {result}")
-            # print(f"result.parts: {result.parts}")
+    if not response.function_calls:
+        return response.text
 
-            try:
-                function_response = result.parts[
-                    0
-                ].function_response.response  # ignore warnings???
-                if verbose:
-                    print(f"-> {function_response}")
-            except (IndexError, AttributeError):
-                raise Exception("Function call did not return a valid response")
-    else:
-        print(response.text)
+    function_responses = []
+    for function_call_part in response.function_calls:
+        function_call_result = call_function(function_call_part, verbose)
+
+        if (
+            not function_call_result.parts
+            or not function_call_result.parts[0].function_response
+        ):
+            raise Exception("Function call did not return a valid response.")
+        if verbose:
+            print(f"-> {function_call_result.parts[0].function_response.response}")
+
+        function_responses.append(function_call_result.parts[0])
+
+        function_call_content = types.Content(
+            parts=function_call_result.parts, role="tool"
+        )
+        messages.append(function_call_content)
+
+    if not function_responses:
+        raise Exception("No function responses were generated")
+
+    return function_responses
 
 
 if __name__ == "__main__":
